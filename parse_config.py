@@ -16,7 +16,7 @@ class Config:
     
     def read_and_validate_format(self) -> list[str]:
         if len(sys.argv) != 2:
-            print("ERROR: Invalid number of arguments. "
+            print("ERROR: invalid number of arguments. "
                   "<Usage: python3 a_maze_ing.py config.txt>", file=sys.stderr)
             sys.exit(2) # Error por mal uso de los comandos en terminal
 
@@ -55,7 +55,7 @@ class Config:
                 print(f"ERROR: duplicated key {k}", file=sys.stderr)
                 sys.exit(1)
 
-            if k == "WIDTH" or k == "HEIGHT": # comprobar si el valor es +, más abajo que no sean 1 ambos (cuando estén los dos almacenados)
+            if k == "WIDTH" or k == "HEIGHT": # comprobar si el valor es +
                 try:
                     value = int(v)
                     if value <= 0:
@@ -72,7 +72,7 @@ class Config:
                     print(f"ERROR: {e}", file=sys.stderr)
                     sys.exit(1)
 
-            elif k == "ENTRY" or k =="EXIT": # de momento solo + y guardo, falta comprobar que sean distintos y que estén dentro
+            elif k == "ENTRY" or k =="EXIT": # comprobar que sea + y guardo
                 try:
                     v1, v2 = v.split(",")
                     x = int(v1)
@@ -124,7 +124,7 @@ class Config:
             sys.exit(1)
         return keys
     
-    def check_mandatory_keys(self, keys: list[str]) -> None: # comprueba sin están todas las obligatorias
+    def check_mandatory_keys(self, keys: list[str]) -> None: # comprueba sin están todas las obligatorias. Lo hago aparte porque se necesita haber terminado de ver
         mandatory_keys = [
             "WIDTH", "HEIGHT", "ENTRY", "EXIT",
             "OUTPUT_FILE", "PERFECT"
@@ -135,9 +135,19 @@ class Config:
             print(f"ERROR: not all keys present. Missing: {missing}", file=sys.stderr)
             sys.exit(1)
 
-# me falta que entry y exit sean distintos y están dentro del laberinto
+    def check_entry_and_exit(self) -> None: # comprueba si entrada y salida son distintas y están en el laberinto. Aparte porque tienen que estar registrados los datos
+        if self.entry == self.exit:
+            print("ERROR: entry and exit must be different", file=sys.stderr)
+            sys.exit(1)
+        coord = [self.entry, self.exit]
+        for c in coord:
+            x, y = c[0], c[1]
+            if x >= self.width or y >= self.height:
+                print(f"ERROR: {c} is outside the maze", file=sys.stderr)
+                sys.exit(1)
 
 
 config = Config()
 keys = config.read_and_validate_format()
 config.check_mandatory_keys(keys)
+config.check_entry_and_exit()
