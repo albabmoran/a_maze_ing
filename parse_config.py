@@ -3,11 +3,31 @@ from typing import Optional
 
 
 class InvalidValue(Exception):
+    """
+    Exception raised when a configuration key has
+    an invalid value format or range.
+    """
     pass
 
 
 class Config:
+    """
+    Handles loading, parsing, and verifying maze configuration files.
+
+    Attributes:
+        width (int): The width of the maze.
+        height (int): The height of the maze.
+        entry (tuple[int, int]): Coordinates (x, y) for the maze entrance.
+        exit (tuple[int, int]): Coordinates (x, y) for the maze exit.
+        output_file (str): The name of the file where the output will be saved.
+        perfect (bool): True if the maze is perfect, False otherwise.
+        seed (Optional[int]): The random generation seed. Defaults to None.
+    """
+
     def __init__(self) -> None:
+        """
+        Initializes an empty Config instance with uninitialized parameters.
+        """
         self.width: int
         self.height: int
         self.entry: tuple[int, int]
@@ -17,6 +37,18 @@ class Config:
         self.seed: Optional[int] = None
 
     def read_and_validate_format(self) -> list[str]:
+        """
+        Reads configuration data from a file and validates syntax and
+        constraints.
+
+        Verifies that command line arguments are correct, attempts
+        to open the configuration file, validates line formatting
+        (KEY=VALUE with no spaces), and safely parses each valid parameter
+        according to its type.
+
+        Returns:
+            list[str]: list containing all the valid keys successfully parsed.
+        """
         if len(sys.argv) != 2:
             print("ERROR: invalid number of arguments. "
                   "<Usage: python3 a_maze_ing.py config.txt>", file=sys.stderr)
@@ -81,7 +113,8 @@ class Config:
                     x = int(v1)
                     y = int(v2)
                     if x < 0 or y < 0:
-                        raise InvalidValue(f"both coordinates ({x},{y}) must be positive")
+                        raise InvalidValue(f"both coordinates ({x},{y})"
+                                           " must be positive")
                     coord = (x, y)
                     if k == "ENTRY":
                         self.entry = coord
@@ -131,6 +164,18 @@ class Config:
         return keys
 
     def check_mandatory_keys(self, keys: list[str]) -> None:  # comprueba sin están todas las obligatorias. Lo hago aparte porque se necesita haber terminado de ver
+        """
+        Validates that all mandatory configuration parameters are present.
+
+        Compares the list of parsed keys against the predefined list of
+        mandatory keys.
+        Prints missing values and aborts execution if any mandatory key is
+        missing.
+
+        Args:
+            keys (list[str]): list of all unique keys found during file
+            processing.
+        """
         mandatory_keys = [
             "WIDTH", "HEIGHT", "ENTRY", "EXIT",
             "OUTPUT_FILE", "PERFECT"
@@ -138,10 +183,18 @@ class Config:
         dif = set(mandatory_keys) - set(keys)
         if dif:
             missing = ", ".join(sorted(dif))
-            print(f"ERROR: not all keys present. Missing: {missing}", file=sys.stderr)
+            print("ERROR: not all keys present. "
+                  f"Missing: {missing}", file=sys.stderr)
             sys.exit(1)
 
     def check_entry_and_exit(self) -> None:  # comprueba si entrada y salida son distintas y están en el laberinto. Aparte porque tienen que estar registrados los datos
+        """
+        Ensures entry and exit logical constraints are respected.
+
+        Verifies that the entrance and exit are located at completely different
+        points, and checks that both sets of coordinates fit inside the defined
+        bounds of the maze (width and height).
+        """
         if self.entry == self.exit:
             print("ERROR: entry and exit must be different", file=sys.stderr)
             sys.exit(1)
