@@ -165,7 +165,7 @@ class MazeGen:
                     and not self.maze[(n_col, n_row)].visited
                 ):
                     valid_ngb.append(('north', 'south', (n_col, n_row)))
-            
+
             e_col, e_row = col + 1, row
             if 0 <= e_col < self.width and (0 <= e_row < self.height):
                 if (
@@ -173,7 +173,7 @@ class MazeGen:
                     and not self.maze[(e_col, e_row)].visited
                 ):
                     valid_ngb.append(('east', 'west', (e_col, e_row)))
-            
+
             s_col, s_row = col, row + 1
             if 0 <= s_col < self.width and (0 <= s_row < self.height):
                 if (
@@ -181,7 +181,7 @@ class MazeGen:
                     and not self.maze[(s_col, s_row)].visited
                 ):
                     valid_ngb.append(('south', 'north', (s_col, s_row)))
-            
+
             w_col, w_row = col - 1, row
             if 0 <= w_col < self.width and (0 <= w_row < self.height):
                 if (
