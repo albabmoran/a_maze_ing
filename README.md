@@ -4,9 +4,11 @@
 
 ## Description
 
-**A-Maze-ing** is a collaborative Python project from the 42 curriculum focused on procedural maze generation, pathfinding algorithms, modular software design, and graphical visualization.
+**A-Maze-ing** is a collaborative Python project from the 42 curriculum focused on procedural maze generation, graph algorithms, modular software design, and graphical visualization.
 
-The project generates a maze from a configuration file, displays it in a graphical window, and optionally computes and animates the shortest path between the maze entrance and exit. The application was designed with modularity in mind, separating the maze generation and solving logic into a reusable Python package that can be integrated into other projects.
+The program generates a maze from a configuration file, writes it to an output file using a hexadecimal wall representation, displays it graphically, and computes the shortest path between the entrance and the exit.
+
+The project was designed with modularity in mind by separating the maze generation and solving logic into an independent Python package that can be reused in future projects.
 
 ---
 
@@ -16,33 +18,37 @@ The project generates a maze from a configuration file, displays it in a graphic
 
 The project requires:
 
-- Python 3
+- Python 3.10 or later
 - pygame
 - make
 
 Install the dependencies:
 
 ```bash
-pip install -r requirements.txt
+make install
 ```
 
-Compile and launch the project:
+Run the project:
 
 ```bash
-make
+make run
 ```
 
-or
+or directly:
 
 ```bash
-python3 src/main.py config.cfg
+python3 a_maze_ing.py config.txt
 ```
+
+The program receives a single configuration file describing the maze to generate and validates all parameters before creating the maze.
 
 ---
 
-## Configuration File
+# Configuration File
 
-The maze is generated from a configuration file with the following format:
+The maze is configured using a plain text file containing one `KEY=VALUE` pair per line.
+
+Example:
 
 ```text
 WIDTH=20
@@ -54,30 +60,222 @@ PERFECT=False
 SEED=1234
 ```
 
-### Parameters
+## Configuration Parameters
 
 | Parameter | Description |
 |-----------|-------------|
-| `WIDTH` | Width of the maze |
+| `WIDTH` | Width of the maze (cells) |
 | `HEIGHT` | Height of the maze |
-| `ENTRY` | Entrance coordinates |
-| `EXIT` | Exit coordinates |
-| `OUTPUT_FILE` | Output file where the maze is stored |
-| `PERFECT` | Generates a perfect maze when enabled |
+| `ENTRY` | Entrance coordinates `(x,y)` |
+| `EXIT` | Exit coordinates `(x,y)` |
+| `OUTPUT_FILE` | Output filename |
+| `PERFECT` | Generates a perfect maze when `True` |
 | `SEED` | Seed used for deterministic generation |
 
 ---
 
-## Usage
+# Output File
 
-Run the program by providing a configuration file:
+The generated maze is written to the output file using the hexadecimal encoding required by the subject.
+
+Each hexadecimal digit represents the walls of one cell:
+
+| Bit | Wall |
+|-----|------|
+| 0 | North |
+| 1 | East |
+| 2 | South |
+| 3 | West |
+
+After the maze representation, the file also contains:
+
+- Entry coordinates
+- Exit coordinates
+- Shortest path using the letters `N`, `E`, `S` and `W`
+
+---
+
+# Algorithms
+
+## Maze Generation — Depth-First Search (DFS)
+
+Maze generation is based on the **Depth-First Search (DFS)** recursive backtracking algorithm.
+
+Starting from the entrance, the algorithm visits neighboring cells in random order while carving passages between them. Whenever it reaches a dead end, it backtracks until it finds a cell with unexplored neighbors.
+
+### Why DFS?
+
+DFS was selected because it:
+
+- is simple and efficient to implement;
+- generates connected mazes with natural-looking corridors;
+- guarantees that every cell is reachable;
+- naturally produces perfect mazes when required.
+
+Its time complexity is **O(n)**, where *n* is the number of cells.
+
+---
+
+## Maze Solving — Breadth-First Search (BFS)
+
+The shortest path is computed using **Breadth-First Search (BFS)**.
+
+Beginning at the entrance, BFS explores the maze level by level until it reaches the exit. The path is then reconstructed from the visited nodes.
+
+### Why BFS?
+
+BFS guarantees the **shortest path** in an unweighted graph, making it the most appropriate algorithm for maze solving.
+
+Its complexity is also **O(n)**.
+
+---
+
+# Perfect vs Non-Perfect Mazes
+
+The project supports two generation modes.
+
+### PERFECT=True
+
+A **perfect maze** contains exactly one possible path between any two cells. There are no loops, making the maze equivalent to a spanning tree.
+
+### PERFECT=False
+
+The default mode generates a maze suitable for a Pac-Man-like game.
+
+Additional corridors are opened to create loops, allowing multiple possible routes between locations while maintaining full connectivity.
+
+---
+
+# Reusable Package
+
+One of the project requirements is to make the maze generation reusable.
+
+The maze generation and solving logic are isolated inside an independent Python package built using the project's `pyproject.toml`.
+
+The package can be built into a standard Python distribution (`.whl` or `.tar.gz`) and installed in another project using `pip`.
+
+Example:
 
 ```bash
-python3 src/main.py config.cfg
+pip install mazegen-1.0.0-py3-none-any.whl
 ```
 
-The application generates the maze, displays it in a graphical window, and allows several interactive options.
+Once installed, the generator can be imported independently of the graphical interface:
 
+```python
+from mazegen import MazeGenerator
+
+generator = MazeGenerator(width=20, height=20, seed=1234)
+maze = generator.generate()
+solution = generator.solve()
+```
+
+This modular architecture separates:
+
+- maze generation;
+- maze solving;
+- configuration parsing;
+- graphical interface.
+
+This makes the generation package reusable without modifying its internal implementation.
+
+---
+
+# Display Features
+
+The graphical interface includes several interactive options:
+
+- Generate a new maze
+- Show or hide the solution
+- Animate the solution
+- Change maze colors
+- Change wall colors
+- Exit the application
+
+These features make it easier to visualize both the generated maze and the pathfinding process.
+
+---
+
+# Team & Project Management
+
+## Roles
+
+### Alba (albben-a)
+
+Responsible for:
+
+- configuration file parsing;
+- DFS maze generation;
+- graphical maze rendering.
+
+### Jesús (jezambra)
+
+Responsible for:
+
+- BFS maze solving;
+- Makefile;
+- solution animation;
+- keyboard controls and display options.
+
+---
+
+## Planning & Evolution
+
+Before starting development, we agreed on a common project architecture, shared data structures, and naming conventions. This allowed both team members to work independently while ensuring compatibility between modules.
+
+Throughout the project, we regularly reviewed each other's work and refined the interfaces between the generation, solving, and visualization components as new requirements emerged.
+
+---
+
+## Retrospective
+
+### What worked well
+
+Separating the project into reusable modules allowed parallel development with minimal conflicts.
+
+Defining the maze representation before implementing the algorithms made integration significantly easier.
+
+### What could be improved
+
+Although the initial planning was effective, some interfaces evolved during development, requiring minor refactoring. Defining every module interface in greater detail from the beginning would have reduced these changes.
+
+---
+
+## Tools Used
+
+The following tools were used throughout the project:
+
+- Visual Studio Code
+- Git
+- GitHub
+- Python virtual environments
+
+---
+
+# Resources
+
+## Documentation & References
+
+- A-Maze-ing subject :contentReference[oaicite:0]{index=0}
+- Python Official Documentation
+- pygame Documentation
+- DFS and BFS algorithm documentation
+- Graph Theory references
+- Peer-to-peer discussions
+- https://noreply.gitbook.io/born2beroot (used as inspiration for project organization and documentation style)
+
+---
+
+## Use of Artificial Intelligence
+
+Artificial Intelligence was used to:
+
+- clarify specific Python concepts;
+- discuss alternative approaches for maze generation and graph traversal;
+- design additional test cases;
+- assist in writing and reviewing the project documentation.
+
+AI was **not used to generate the implementation of the maze generation, maze solving, configuration parser, or graphical interface**. All code was designed, implemented, tested, and reviewed by the project authors to ensure full understanding of the project and compliance with the learning objectives of the 42 curriculum.
 ---
 
 # Algorithms
