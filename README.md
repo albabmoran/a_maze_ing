@@ -1,4 +1,3 @@
-````markdown
 *This project has been created as part of the 42 curriculum by albben-a, jezambra.*
 
 # A-Maze-ing
@@ -227,4 +226,3 @@ Artificial Intelligence was used to:
 - assist in writing project documentation.
 
 AI was **not used to generate the core implementation of the maze generation, solving algorithms, or graphical interface**. All code was designed, implemented, tested, and integrated by the project authors in accordance with the learning objectives of the 42 curriculum.
-````
