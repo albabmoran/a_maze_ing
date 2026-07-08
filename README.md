@@ -166,8 +166,8 @@ After installation, the package can be imported independently of the graphical a
 from mazegen import MazeGenerator
 
 generator = MazeGenerator()
-generator.generate()
-generator.solve()
+generator.gen_maze()
+generator.solve_maze()
 ```
 
 The project is divided into four independent components:
