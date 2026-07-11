@@ -2,6 +2,10 @@
 
 # A-Maze-ing
 
+<center>
+  <img src="a_maze_ing.gif" alt="Demostración del proyecto" width="600">
+</center>
+
 ## Description
 
 **A-Maze-ing** is a collaborative Python project from the 42 curriculum focused on procedural maze generation, graph algorithms, modular software design, and graphical visualization.
@@ -70,7 +74,7 @@ SEED=1234
 | `EXIT` | Exit coordinates `(x,y)` |
 | `OUTPUT_FILE` | Output filename |
 | `PERFECT` | Generates a perfect maze when `True` |
-| `SEED` | Seed used for deterministic generation |
+| `SEED` (Opt) | Seed used for deterministic generation |
 
 ---
 
@@ -99,7 +103,7 @@ After the maze representation, the file also contains:
 
 ## Maze Generation — Depth-First Search (DFS)
 
-Maze generation is based on the **Depth-First Search (DFS)** recursive backtracking algorithm.
+Maze generation is based on the **Depth-First Search (DFS)** iterative backtracking algorithm.
 
 Starting from the entrance, the algorithm visits neighboring cells in random order while carving passages between them. Whenever it reaches a dead end, it backtracks until it finds a cell with unexplored neighbors.
 
@@ -202,12 +206,12 @@ By separating the graphical layer from the generation and solving logic, the pro
 
 The graphical application provides several interactive options:
 
-- Generate a new random maze
-- Show or hide the solution
-- Animate the solution
-- Change maze colors
-- Change wall colors
-- Exit the application
+- 1 - Generate a new random maze
+- 2 - Show or hide the solution
+- 3 - Change maze colors
+- 4 - Change wall colors
+- 5 - Animate the solution
+- 6 - Exit the application
 
 These options allow users to visualize both the maze generation and the pathfinding process in different ways.
 

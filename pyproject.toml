@@ -1,0 +1,29 @@
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "mazegen"
+version = "1.0.0"
+description = "Maze generator using DFS algorithm with BFS pathfinding solution"
+requires-python = ">=3.10"
+authors = [
+    {name = "albben-a", email = "albben-a@student.42madrid.com"},
+    {name = "jezambra", email = "jezambra@student.42madrid.com"}
+]
+
+[tool.setuptools]
+packages = ["mazegen"]
+
+[tool.mypy]
+exclude = "^(venv|mlx)/"
+warn_return_any = true
+warn_unused_ignores = true
+ignore_missing_imports = true
+disallow_untyped_defs = true
+check_untyped_defs = true
+
+[[tool.mypy.overrides]]
+module = "mlx.*"
+follow_imports = "skip"
+ignore_missing_imports = true
