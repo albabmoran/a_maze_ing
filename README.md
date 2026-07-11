@@ -287,6 +287,16 @@ The following tools were used throughout the project:
 
 ---
 
+# License
+
+This project is licensed under the MIT License.
+
+The reusable maze generator package may be used, modified, and redistributed under the terms of the MIT License.
+
+See `LICENSE.md` for the complete license text.
+
+---
+
 ## Use of Artificial Intelligence
 
 Artificial Intelligence was used to:
