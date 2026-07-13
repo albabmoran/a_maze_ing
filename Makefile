@@ -14,7 +14,7 @@ install:
 	@. venv/bin/activate && pip install -r $(REQ_FILE)
 	@echo "$(GREEN) -> Installation Complete!$(RESET)"
 
-run: install
+run:
 	@echo "$(GREEN) -> Running $(SCRIPT) with $(CONFIG) $(RESET)"
 	@$(PYTHON) $(SCRIPT) $(CONFIG)
 
