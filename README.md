@@ -2,9 +2,9 @@
 
 # A-Maze-ing
 
-<center>
-  <img src="a_maze_ing.gif" alt="Demostración del proyecto" width="600">
-</center>
+<p align="center">
+  <img src="a_maze_ing.gif" alt="project demonstration" width="600">
+</p>
 
 ## Description
 
